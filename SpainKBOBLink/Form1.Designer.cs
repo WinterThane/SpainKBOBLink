@@ -68,16 +68,22 @@
             this.groupSelectComboBox.FormattingEnabled = true;
             this.groupSelectComboBox.Location = new System.Drawing.Point(165, 31);
             this.groupSelectComboBox.Name = "groupSelectComboBox";
-            this.groupSelectComboBox.Size = new System.Drawing.Size(121, 21);
+            this.groupSelectComboBox.Size = new System.Drawing.Size(67, 21);
             this.groupSelectComboBox.TabIndex = 2;
+            this.groupSelectComboBox.SelectedValueChanged += new System.EventHandler(this.groupSelectComboBox_SelectedValueChanged);
             // 
             // spanishGrid
             // 
+            this.spanishGrid.AllowUserToAddRows = false;
+            this.spanishGrid.AllowUserToDeleteRows = false;
             this.spanishGrid.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.spanishGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.spanishGrid.Location = new System.Drawing.Point(16, 58);
+            this.spanishGrid.MultiSelect = false;
             this.spanishGrid.Name = "spanishGrid";
+            this.spanishGrid.ReadOnly = true;
+            this.spanishGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.spanishGrid.Size = new System.Drawing.Size(642, 150);
             this.spanishGrid.TabIndex = 3;
             // 
@@ -106,7 +112,7 @@
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(12, 413);
+            this.button1.Location = new System.Drawing.Point(14, 413);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(110, 25);
             this.button1.TabIndex = 6;

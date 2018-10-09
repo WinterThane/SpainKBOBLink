@@ -1,4 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
@@ -115,6 +116,48 @@ namespace SpainKBOBLink
                 while (dataReader.Read())
                 {
                     results.Add(dataReader["material_group"] + "");
+                }
+
+                dataReader.Close();
+                CloseConnection();
+
+                return results;
+            }
+            else
+            {
+                return results;
+            }
+        }
+
+        public List<MaterialSpainModel> SelectSpanishMaterials(string param)
+        {
+            var query = "SELECT id_material, material_group, short_description, co2, " +
+                        "energy_consumption, raw_material, post_recycling, pre_recycling " +
+                        "FROM hornetdb.spanish_material " +
+                        "WHERE material_group = @group " +
+                        "ORDER BY short_description ASC";
+
+            var results = new List<MaterialSpainModel>();
+
+            if (OpenConnection() == true)
+            {
+                var cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@group", param);
+                var dataReader = cmd.ExecuteReader();
+
+                while (dataReader.Read())
+                {
+                    results.Add(new MaterialSpainModel
+                    {
+                        IdMaterial = (int)dataReader["id_material"],
+                        MaterialGroup = dataReader["material_group"].ToString(),
+                        ShortDescription = dataReader["short_description"].ToString(),
+                        CO2 = dataReader["co2"] != DBNull.Value ? (float)dataReader["co2"] : -1,
+                        EnergyConsumption = dataReader["energy_consumption"] != DBNull.Value ? (float)dataReader["energy_consumption"] : -1,
+                        RawMaterial = dataReader["raw_material"] != DBNull.Value ? (float)dataReader["raw_material"] : -1,
+                        PostRecycling = dataReader["post_recycling"] != DBNull.Value ? (float)dataReader["post_recycling"] : -1,
+                        PreRecycling = dataReader["pre_recycling"] != DBNull.Value ? (float)dataReader["pre_recycling"] : -1
+                    });
                 }
 
                 dataReader.Close();
