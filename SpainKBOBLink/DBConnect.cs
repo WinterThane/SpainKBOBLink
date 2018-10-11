@@ -170,5 +170,93 @@ namespace SpainKBOBLink
                 return results;
             }
         }
+
+        public List<SpainKBOBModel> SelectJoin(string param)
+        {
+            var query = "SELECT sk.id, s.short_description, s.energy_consumption, s.co2, s.raw_material, s.post_recycling, " +
+                        "s.pre_recycling, k.id_kbob, k.surface_mass, k.surface_mass_units, k.ubp13_manufacturing, k.ubp13_disposal, " +
+                        "k.renewable_production, k.renewable_disposal, k.non_renewable_production, k.non_renewable_disposal, " +
+                        "k.greenhouse_gas_emissions_production, k.greenhouse_gas_emissions_disposal " +
+                        "FROM hornetdb.spanish_material s " +
+                        "INNER JOIN hornetdb.spanish_kbob sk " +
+                        "ON s.id_material = sk.id_spanish " +
+                        "INNER JOIN hornetdb.kbob_material k " +
+                        "ON sk.id_kbob = k.id " +
+                        "WHERE short_description = @name " +
+                        "ORDER BY s.short_description ASC";
+
+            var results = new List<SpainKBOBModel>();
+
+            if (OpenConnection() == true)
+            {
+                var cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@name", param);
+                var dataReader = cmd.ExecuteReader();
+
+                while (dataReader.Read())
+                {
+                    results.Add(new SpainKBOBModel
+                    {
+                        Id = (int)dataReader["id"],
+                        ShortDescription = dataReader["short_description"].ToString(),
+                        EnergyConsumption = dataReader["energy_consumption"] != DBNull.Value ? (float)dataReader["energy_consumption"] : -1,
+                        CO2 = dataReader["co2"] != DBNull.Value ? (float)dataReader["co2"] : -1,
+                        RawMaterial = dataReader["raw_material"] != DBNull.Value ? (float)dataReader["raw_material"] : -1,
+                        PostRecycling = dataReader["post_recycling"] != DBNull.Value ? (float)dataReader["post_recycling"] : -1,
+                        PreRecycling = dataReader["pre_recycling"] != DBNull.Value ? (float)dataReader["pre_recycling"] : -1,
+                        SurfaceMass = dataReader["surface_mass"].ToString(),
+                        SurfaceMassUnit = dataReader["surface_mass_units"].ToString(),
+                        Ubp13Manufacture = (float)dataReader["ubp13_manufacturing"],
+                        Ubp13Disposal = (float)dataReader["ubp13_disposal"],
+                        //TotalProduction = (float)dataReader["total_production"],
+                        //TotalDisposal = (float)dataReader["total_disposal"],
+                        RenewableProduction = (float)dataReader["renewable_production"],
+                        RenewableDisposal = (float)dataReader["renewable_disposal"],
+                        NonRenewableProduction = (float)dataReader["non_renewable_production"],
+                        NonRenewableDisposal = (float)dataReader["non_renewable_disposal"],
+                        GreenhouseGasEmissionsProduction = (float)dataReader["greenhouse_gas_emissions_production"],
+                        GreenhouseGasEmissionsDisposal = (float)dataReader["greenhouse_gas_emissions_disposal"]
+                    });
+                }
+
+                dataReader.Close();
+                CloseConnection();
+
+                return results;
+            }
+            else
+            {
+                return results;
+            }
+        }
+
+        public void InsertLink(int spain, int kbob)
+        {
+            var query = "INSERT INTO hornetdb.spanish_kbob (id_spanish, id_kbob) VALUES (@id_spain, @id_kbob);";
+
+            if (OpenConnection() == true)
+            {
+                var cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@id_spain", spain);
+                cmd.Parameters.AddWithValue("@id_kbob", kbob);
+                cmd.ExecuteNonQuery();
+
+                CloseConnection();
+            }
+        }
+
+        public void DeleteLink(int id)
+        {
+            var query = "DELETE FROM hornetdb.spanish_kbob WHERE id = @target";
+
+            if (OpenConnection() == true)
+            {
+                var cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@target", id);
+                cmd.ExecuteNonQuery();
+
+                CloseConnection();
+            }
+        }
     }
 }

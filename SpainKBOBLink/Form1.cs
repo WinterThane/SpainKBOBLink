@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SpainKBOBLink
@@ -21,7 +14,7 @@ namespace SpainKBOBLink
             groupSelectComboBox.DataSource = db.SelectGroups();
             spanishGrid.DataSource = db.SelectSpanishMaterials(groupSelectComboBox.SelectedItem.ToString());
             kbobGrid.DataSource = db.SelectKBOB();
-
+            RefreshJoinedTable(spanishGrid.Rows[0].Cells["ShortDescription"].Value.ToString());
             ResizeSpanishColumns();
             ResizeKBOBColumns();
         }
@@ -57,11 +50,58 @@ namespace SpainKBOBLink
             kbobGrid.Columns["GreenhouseGasEmissionsDisposal"].Width = 70;
         }
 
+        private void RefreshJoinedTable(string param)
+        {
+            joinedGrid.DataSource = null;
+            joinedGrid.DataSource = db.SelectJoin(param);           
+        }
+
+        private void UpdateJoinedTable()
+        {
+            if (spanishGrid.SelectedRows.Count != 0)
+            {
+                RefreshJoinedTable(spanishGrid.SelectedRows[0].Cells["ShortDescription"].Value.ToString());
+            }
+        }
+
         private void groupSelectComboBox_SelectedValueChanged(object sender, EventArgs e)
         {
             spanishGrid.DataSource = null;
             spanishGrid.DataSource = db.SelectSpanishMaterials(groupSelectComboBox.SelectedItem.ToString());
             ResizeSpanishColumns();
+            UpdateJoinedTable();
+        }
+
+        private void makeLink_Click(object sender, EventArgs e)
+        {
+            if (spanishGrid.SelectedRows.Count != 0 && kbobGrid.SelectedRows.Count != 0)
+            {
+                DataGridViewRow bauRow = spanishGrid.SelectedRows[0];
+                var x = bauRow.Cells["IdMaterial"].Value;
+
+                DataGridViewRow kbobRow = kbobGrid.SelectedRows[0];
+                var y = kbobRow.Cells["IdKBOB"].Value;
+
+                db.InsertLink((int)x, (int)y);
+                UpdateJoinedTable();
+            }
+        }
+
+        private void deleteLink_Click(object sender, EventArgs e)
+        {
+            if (joinedGrid.SelectedRows.Count != 0)
+            {
+                DataGridViewRow joinedRow = joinedGrid.SelectedRows[0];
+                var x = joinedRow.Cells["Id"].Value;
+
+                db.DeleteLink((int)x);
+                UpdateJoinedTable();
+            }
+        }
+
+        private void spanishGrid_SelectionChanged(object sender, EventArgs e)
+        {
+            UpdateJoinedTable();
         }
     }
 }

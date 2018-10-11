@@ -32,14 +32,14 @@
             this.label2 = new System.Windows.Forms.Label();
             this.groupSelectComboBox = new System.Windows.Forms.ComboBox();
             this.spanishGrid = new System.Windows.Forms.DataGridView();
-            this.dataGridView2 = new System.Windows.Forms.DataGridView();
+            this.joinedGrid = new System.Windows.Forms.DataGridView();
             this.label3 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.deleteLink = new System.Windows.Forms.Button();
+            this.makeLink = new System.Windows.Forms.Button();
             this.kbobGrid = new System.Windows.Forms.DataGridView();
             this.label4 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.spanishGrid)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.joinedGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.kbobGrid)).BeginInit();
             this.SuspendLayout();
             // 
@@ -86,16 +86,22 @@
             this.spanishGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.spanishGrid.Size = new System.Drawing.Size(642, 150);
             this.spanishGrid.TabIndex = 3;
+            this.spanishGrid.SelectionChanged += new System.EventHandler(this.spanishGrid_SelectionChanged);
             // 
-            // dataGridView2
+            // joinedGrid
             // 
-            this.dataGridView2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.joinedGrid.AllowUserToAddRows = false;
+            this.joinedGrid.AllowUserToDeleteRows = false;
+            this.joinedGrid.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView2.Location = new System.Drawing.Point(16, 234);
-            this.dataGridView2.Name = "dataGridView2";
-            this.dataGridView2.Size = new System.Drawing.Size(1043, 173);
-            this.dataGridView2.TabIndex = 4;
+            this.joinedGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.joinedGrid.Location = new System.Drawing.Point(16, 234);
+            this.joinedGrid.MultiSelect = false;
+            this.joinedGrid.Name = "joinedGrid";
+            this.joinedGrid.ReadOnly = true;
+            this.joinedGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.joinedGrid.Size = new System.Drawing.Size(1043, 173);
+            this.joinedGrid.TabIndex = 4;
             // 
             // label3
             // 
@@ -108,26 +114,28 @@
             this.label3.TabIndex = 5;
             this.label3.Text = "Spanish materials linked with KBOB materials";
             // 
-            // button1
+            // deleteLink
             // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(14, 413);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(110, 25);
-            this.button1.TabIndex = 6;
-            this.button1.Text = "Remove link";
-            this.button1.UseVisualStyleBackColor = true;
+            this.deleteLink.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.deleteLink.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.deleteLink.Location = new System.Drawing.Point(14, 413);
+            this.deleteLink.Name = "deleteLink";
+            this.deleteLink.Size = new System.Drawing.Size(110, 25);
+            this.deleteLink.TabIndex = 6;
+            this.deleteLink.Text = "Remove link";
+            this.deleteLink.UseVisualStyleBackColor = true;
+            this.deleteLink.Click += new System.EventHandler(this.deleteLink_Click);
             // 
-            // button2
+            // makeLink
             // 
-            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button2.Location = new System.Drawing.Point(664, 58);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 25);
-            this.button2.TabIndex = 7;
-            this.button2.Text = "Link";
-            this.button2.UseVisualStyleBackColor = true;
+            this.makeLink.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.makeLink.Location = new System.Drawing.Point(664, 58);
+            this.makeLink.Name = "makeLink";
+            this.makeLink.Size = new System.Drawing.Size(75, 25);
+            this.makeLink.TabIndex = 7;
+            this.makeLink.Text = "Link";
+            this.makeLink.UseVisualStyleBackColor = true;
+            this.makeLink.Click += new System.EventHandler(this.makeLink_Click);
             // 
             // kbobGrid
             // 
@@ -163,10 +171,10 @@
             this.ClientSize = new System.Drawing.Size(1067, 450);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.kbobGrid);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.makeLink);
+            this.Controls.Add(this.deleteLink);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.dataGridView2);
+            this.Controls.Add(this.joinedGrid);
             this.Controls.Add(this.spanishGrid);
             this.Controls.Add(this.groupSelectComboBox);
             this.Controls.Add(this.label2);
@@ -176,7 +184,7 @@
             this.Text = "Link Spanish materials to KBOB materials";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             ((System.ComponentModel.ISupportInitialize)(this.spanishGrid)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.joinedGrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.kbobGrid)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -189,10 +197,10 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox groupSelectComboBox;
         private System.Windows.Forms.DataGridView spanishGrid;
-        private System.Windows.Forms.DataGridView dataGridView2;
+        private System.Windows.Forms.DataGridView joinedGrid;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button deleteLink;
+        private System.Windows.Forms.Button makeLink;
         private System.Windows.Forms.DataGridView kbobGrid;
         private System.Windows.Forms.Label label4;
     }
